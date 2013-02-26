@@ -62,7 +62,7 @@ def log(controlValue, messageQueue,logsDirectory):
     
    
     
-    infLogHandle = open(os.path.join(logsDirectory+'informationLog.txt'),'w')
+    infLogHandle = open(os.path.join(logsDirectory+'/informationLog.txt'),'w')
     debLogHandle = open(os.path.join(logsDirectory+'/debugLog.txt'),'w')
     errLogHandle = open(os.path.join(logsDirectory+'/errorlog.txt'),'w')
     

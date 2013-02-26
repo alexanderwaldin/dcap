@@ -170,7 +170,7 @@ def completeTask(messageQueue, IOLock, task, resultData, resultsDirectory):
             os.remove('./server/temp/results.zip')
         
         #update the completedTasks.txt file in temp to include the completed task
-        if os.path.isfile(pathToCompletedTasks) and os.path.getsize('completedTasks.txt')>0:
+        if os.path.isfile(pathToCompletedTasks) and os.path.getsize(pathToCompletedTasks)>0:
             completedTasksLogHandle = open(pathToCompletedTasks,'a')
         else:
             completedTasksLogHandle = open(pathToCompletedTasks,'w')

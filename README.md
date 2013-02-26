@@ -1,4 +1,1 @@
-dcap
-====
-
-Distributed Computation Architecture in Python
+../dcapgit/README.md
