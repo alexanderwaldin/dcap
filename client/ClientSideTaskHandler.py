@@ -28,16 +28,18 @@ def handleClientTask(messageQueue, serverMessage,resultsDirectory):
         clientScriptHandle = open(os.path.join(temporaryDirectory,'clientTask.py'),'w')
         clientScriptHandle.writelines(clientScript)
         clientScriptHandle.close()
+        dataDirectory = None
         #if data exists, write data to file and extract it to ./temp/receivedData
         if not serverMessage['data'] == None:
-            os.mkdir(os.path.join(temporaryDirectory,'receivedData'))
+            dataDirectory = os.path.join(temporaryDirectory,'receivedData')
+            os.mkdir(dataDirectory)
             dataHandle = open(os.path.join(temporaryDirectory,'data.zip'),'w')
             dataHandle.writelines(serverMessage['data'])
             dataHandle.close()
-            UtilityFunctions.unzipFile(os.path.join(temporaryDirectory,'data.zip'), os.path.join(temporaryDirectory,'receivedData'))
+            UtilityFunctions.unzipFile(os.path.join(temporaryDirectory,'data.zip'), dataDirectory)
             
         #execute received script
-        subprocess.call(['python',os.path.join(temporaryDirectory,'clientTask.py'),os.path.abspath(os.path.join(temporaryDirectory,'receivedData'))
+        subprocess.call(['python',os.path.join(temporaryDirectory,'clientTask.py'),os.path.abspath(dataDirectory)
                          ,os.path.abspath(resultsDirectory),])
         
         #cleanup temp folder

@@ -160,14 +160,23 @@ def completeTask(messageQueue, IOLock, task, resultData, resultsDirectory):
         
         #check if directory already exists, if it does, that means the task name was not unique
         if os.path.isdir(pathToResult):
-            messageQueue.put(UtilityFunctions.createLogEntry('err','The following taskname is not unique: '+taskName+' cannot store result for ' + task))
-        else: #unzip results into ./resultsDirectory/taskName
-            resultHandle = open('./server/temp/results.zip','w')
-            resultHandle.writelines(resultData)
-            resultHandle.close()
-            os.makedirs(pathToResult)
-            UtilityFunctions.unzipFile('./server/temp/results.zip',pathToResult)
-            os.remove('./server/temp/results.zip')
+            
+            #add a counter to the task
+            counter = 1
+            pathToResult = os.path.join(resultsDirectory,taskName+str(counter))
+            while(os.path.isdir(pathToResult)): #Note that counter will not overflow, as pythons ints are limited by address space, see http://stackoverflow.com/questions/9860588/maximum-value-for-long-integer so there will be other issues long before counter gets to big
+                counter = counter+1; 
+                pathToResult = os.path.join(resultsDirectory,taskName+str(counter))
+            
+            messageQueue.put(UtilityFunctions.createLogEntry('err','The following taskname is not unique: '+taskName+' the taskname was stored as: ' 
+                                                             + taskName+str(counter)))
+        #unzip results into pathToResult
+        resultHandle = open('./server/temp/results.zip','w')
+        resultHandle.writelines(resultData)
+        resultHandle.close()
+        os.makedirs(pathToResult)
+        UtilityFunctions.unzipFile('./server/temp/results.zip',pathToResult)
+        os.remove('./server/temp/results.zip')
         
         #update the completedTasks.txt file in temp to include the completed task
         if os.path.isfile(pathToCompletedTasks) and os.path.getsize(pathToCompletedTasks)>0:
